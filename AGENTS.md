@@ -60,5 +60,6 @@ Docs: https://docs.expo.dev/eas/index.md
 
 ## Communication
 
+- Write each spec, proposal or any docs in Spanish even if the request is in English.
 - Generate code that is easy to understand for development team.
 - Add comments only when you find complexity in code.
