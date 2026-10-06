@@ -6,6 +6,7 @@
 - **Expo**
 - **TypeScript**
 - **Jest**
+- No backend (Mock data Only)
 - Local in-memory state
 
 ## Architecture
@@ -35,3 +36,6 @@ npm run android
 ```bash
 npm test
 ```
+## Gool if this project 
+This project is intended as a demo to explore how to define a system using OpenSpec
+and generate a mobile app structure using AI. 
