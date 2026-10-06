@@ -1,4 +1,9 @@
-import { BOOKING_ERROR_MESSAGES, EMPTY_RESERVATIONS_MESSAGE } from '@/features/class-booking/messages';
+import {
+  BOOKING_ERROR_MESSAGES,
+  BOOKING_SUCCESS_MESSAGE,
+  EMPTY_RESERVATIONS_MESSAGE,
+  getFeedbackSeverity,
+} from '@/features/class-booking/messages';
 import { getReservedClasses } from '@/features/class-booking/selectors';
 import { bookingReducer, initialBookingState } from '@/features/class-booking/state';
 import { scheduleClass } from '@/features/class-booking/time';
@@ -22,7 +27,11 @@ function makeClass(id: string, diaOffset: number, hora: string) {
 
 describe('estado de reservas en memoria', () => {
   it('inicia sin reservas ni feedback', () => {
-    expect(initialBookingState).toEqual({ reservations: [], feedback: null });
+    expect(initialBookingState).toEqual({
+      reservations: [],
+      feedback: null,
+      feedbackSeverity: null,
+    });
   });
 
   it('aplica una reserva o cancelación exitosa al estado compartido', () => {
@@ -32,12 +41,20 @@ describe('estado de reservas en memoria', () => {
       result: { ok: true, message: 'éxito', reservations },
     });
 
-    expect(next).toEqual({ reservations, feedback: 'éxito' });
+    expect(next).toEqual({
+      reservations,
+      feedback: 'éxito',
+      feedbackSeverity: 'success',
+    });
   });
 
   it('conserva las reservas ante un rechazo y expone su mensaje', () => {
     const reservations = [{ classId: 'C-01' }];
-    const state = { reservations, feedback: null };
+    const state = {
+      reservations,
+      feedback: null,
+      feedbackSeverity: null,
+    };
     const next = bookingReducer(state, {
       type: 'operationCompleted',
       result: {
@@ -50,6 +67,48 @@ describe('estado de reservas en memoria', () => {
 
     expect(next.reservations).toBe(reservations);
     expect(next.feedback).toBe(BOOKING_ERROR_MESSAGES.ALREADY_BOOKED);
+    expect(next.feedbackSeverity).toBe('warning');
+  });
+
+  it('limpia el mensaje y el código usados por la presentación', () => {
+    const next = bookingReducer(
+      {
+        reservations: [{ classId: 'C-01' }],
+        feedback: BOOKING_ERROR_MESSAGES.ALREADY_BOOKED,
+        feedbackSeverity: 'warning',
+      },
+      { type: 'clearFeedback' },
+    );
+
+    expect(next.feedback).toBeNull();
+    expect(next.feedbackSeverity).toBeNull();
+  });
+});
+
+describe('severidad de la retroalimentación', () => {
+  const reservations = [{ classId: 'C-01' }];
+
+  it('clasifica la reserva exitosa como success sin cambiar su mensaje', () => {
+    const result = { ok: true as const, message: BOOKING_SUCCESS_MESSAGE, reservations };
+
+    expect(getFeedbackSeverity(result)).toBe('success');
+    expect(result.message).toBe('¡Listo! Tu cupo está reservado');
+  });
+
+  it.each([
+    ['ALREADY_BOOKED', 'warning', 'Ya reservaste esta clase.'],
+    ['CANCELLATION_WINDOW', 'warning', 'Ya no puedes cancelar: faltan menos de 2 horas.'],
+    ['NO_CAPACITY', 'error', 'Esta clase ya no tiene cupos.'],
+    ['DAILY_LIMIT', 'error', 'Solo puedes reservar 2 clases por día.'],
+  ] as const)('clasifica %s como %s', (code, severity, message) => {
+    const result = { ok: false as const, code, message: BOOKING_ERROR_MESSAGES[code], reservations };
+
+    expect(getFeedbackSeverity(result)).toBe(severity);
+    expect(result.message).toBe(message);
+  });
+
+  it('no crea retroalimentación para una cancelación exitosa sin mensaje', () => {
+    expect(getFeedbackSeverity({ ok: true, message: '', reservations })).toBeNull();
   });
 });
 

@@ -8,9 +8,11 @@
 - **TypeScript (`npx tsc --noEmit`)**: confirmé que el proyecto continuaba compilando después de generar la documentación.
 - **Expo CLI (`npx expo lint`)**: intenté ejecutar el lint requerido por el proyecto; detecté que ESLint todavía no estaba configurado y evité conservar la instalación automática fuera del alcance.
 - **Documentación oficial de Expo SDK 57 y React Native 0.86**: confirmé versiones, configuración de Jest, Expo Router, ESLint y el componente `Modal` antes de implementar.
-- **Jest con `jest-expo`**: ejecuté 28 pruebas unitarias sobre fechas, disponibilidad, reservas, cancelaciones, mensajes y estado en memoria.
+- **Jest con `jest-expo`**: ejecuté 35 pruebas unitarias sobre fechas, disponibilidad, reservas, cancelaciones, mensajes, severidades y estado en memoria.
 - **Expo Export**: generé bundles para iOS, Android y web para comprobar que las rutas y componentes compilan en las tres plataformas.
 - **Navegador automatizado**: recorrí el catálogo y “Mis reservas” en vista móvil, verifiqué modo oscuro, mensajes, límite diario y confirmación de cancelación.
+- **Vista previa web móvil**: verifiqué el toast de RN-02 con el catálogo desplazado hasta la parte inferior, comprobando su posición superpuesta, el texto accesible y que el intento duplicado no alterara el cupo.
+- **Validación visual por severidad**: comprobé en viewport móvil los toasts verde de éxito, amarillo de advertencia y rojo de error, sus etiquetas accesibles, cierre, posición flotante y funcionamiento tanto en catálogo como en “Mis reservas”.
 
 ## Prompts clave (3 a 5)
 | # | Fase | Prompt | Qué obtuve |
@@ -21,6 +23,18 @@
 | 4 | Caso límite temporal | "Considera especialmente la regla de cancelación de dos horas y usa `diaOffset` con la zona horaria `America/Bogota`." | Se documentó que cancelar exactamente dos horas antes está permitido y que cualquier anticipación menor se rechaza. |
 | 5 | Diseño técnico | "Usa Expo, React Native y TypeScript; separa la lógica de negocio de la UI para probarla con Jest; guarda reservas en memoria y usa el mock de clases." | Diseño con dominio puro, reloj inyectable, estado compartido en memoria y tareas de pruebas unitarias. |
 
+### Ajuste posterior de RN-02
+
+| Prompt | Qué obtuve |
+|---|---|
+| "El mensaje de error indicando que la reserva ya existe debe ser un toast, porque al hacer scroll podría no verse." | Se actualizó la especificación, el diseño y las tareas; después se implementó un toast accesible fuera del `ScrollView`, visible independientemente de la posición del catálogo. |
+
+### Generalización de la retroalimentación
+
+| Prompt | Qué obtuve |
+|---|---|
+| "Cualquier mensaje debe ser flotante y manejar rojo para error, amarillo para warning y verde para success." | Se conservaron las tareas históricas y se agregó un nuevo incremento OpenSpec. La implementación usa severidades tipadas, un toast compartido entre pantallas y etiquetas visibles y accesibles que no dependen únicamente del color. |
+
 ## Errores de la IA que detecté
 | # | Qué hizo mal | Cómo lo detecté | Cómo lo resolví |
 |---|---|---|---|
@@ -29,6 +43,7 @@
 | 3 | Una inspección usó el patrón `bun.lock*` en `zsh`; al no existir coincidencias, el shell detuvo ese comando con `no matches found`. | La terminal mostró `zsh: no matches found: bun.lock*`. | Se comprobó después el gestor de paquetes listando los archivos del proyecto; existe `package-lock.json`, por lo que corresponden comandos con `npx`. |
 | 4 | El primer parche de interfaz intentó modificar `app-tabs.web.tsx` varias veces dentro de la misma operación. | La herramienta rechazó el parche antes de aplicar cambios parciales. | Se reorganizó la edición para modificar cada archivo una sola vez por parche. |
 | 5 | El lint inicial reveló un `setState` síncrono dentro de un efecto en el hook web heredado del starter. | `npx expo lint` señaló `react-hooks/set-state-in-effect` en `use-color-scheme.web.ts`. | Se reemplazó el efecto por `useSyncExternalStore`, conservando el comportamiento seguro para render estático y dejando lint sin errores. |
+| 6 | El servidor de desarrollo de Expo no terminó de iniciar durante la verificación del toast en el entorno sin red. | El proceso quedó esperando después de informar que la red estaba deshabilitada y no abrió el puerto solicitado. | Se generó una exportación web local con Expo, se sirvió temporalmente en `127.0.0.1` y se completó la prueba móvil sobre ese bundle. |
 
 ## Resultado de `openspec validate`
 ```

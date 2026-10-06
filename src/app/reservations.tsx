@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Platform, ScrollView, StyleSheet } from 'react-native';
+import { Platform, ScrollView, StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { BookingFeedback } from '@/components/booking-feedback';
+import { BookingFeedbackOverlay } from '@/components/booking-feedback-overlay';
 import { CancellationConfirmation } from '@/components/cancellation-confirmation';
 import { ClassCard } from '@/components/class-card';
 import { ThemedText } from '@/components/themed-text';
@@ -15,43 +15,42 @@ import { useTheme } from '@/hooks/use-theme';
 export default function ReservationsScreen() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-  const { reservedClasses, feedback, cancel, clearFeedback } = useBooking();
+  const { reservedClasses, feedback, feedbackSeverity, cancel, clearFeedback } = useBooking();
   const [classToCancel, setClassToCancel] = useState<string | null>(null);
 
   return (
-    <ScrollView
-      style={{ backgroundColor: theme.background }}
-      contentContainerStyle={[
-        styles.content,
-        {
-          paddingTop: Math.max(insets.top, Spacing.four),
-          paddingBottom: insets.bottom + BottomTabInset + Spacing.five,
-        },
-        Platform.OS === 'web' && styles.webContent,
-      ]}>
-      <ThemedText type="subtitle">Mis reservas</ThemedText>
-      <ThemedText themeColor="textSecondary">
-        Administra las clases a las que vas a asistir.
-      </ThemedText>
-
-      {feedback && <BookingFeedback message={feedback} onDismiss={clearFeedback} />}
-
-      {reservedClasses.length === 0 ? (
-        <ThemedText accessibilityRole="text" style={styles.empty} themeColor="textSecondary">
-          {EMPTY_RESERVATIONS_MESSAGE}
+    <View style={[styles.screen, { backgroundColor: theme.background }]}>
+      <ScrollView
+        contentContainerStyle={[
+          styles.content,
+          {
+            paddingTop: Math.max(insets.top, Spacing.four),
+            paddingBottom: insets.bottom + BottomTabInset + Spacing.five,
+          },
+          Platform.OS === 'web' && styles.webContent,
+        ]}>
+        <ThemedText type="subtitle">Mis reservas</ThemedText>
+        <ThemedText themeColor="textSecondary">
+          Administra las clases a las que vas a asistir.
         </ThemedText>
-      ) : (
-        reservedClasses.map((item) => (
-          <ClassCard
-            key={item.id}
-            scheduledClass={item}
-            dayLabel={formatClassDay(item.startAt)}
-            actionLabel="Cancelar"
-            actionTone="danger"
-            onAction={() => setClassToCancel(item.id)}
-          />
-        ))
-      )}
+
+        {reservedClasses.length === 0 ? (
+          <ThemedText accessibilityRole="text" style={styles.empty} themeColor="textSecondary">
+            {EMPTY_RESERVATIONS_MESSAGE}
+          </ThemedText>
+        ) : (
+          reservedClasses.map((item) => (
+            <ClassCard
+              key={item.id}
+              scheduledClass={item}
+              dayLabel={formatClassDay(item.startAt)}
+              actionLabel="Cancelar"
+              actionTone="danger"
+              onAction={() => setClassToCancel(item.id)}
+            />
+          ))
+        )}
+      </ScrollView>
 
       <CancellationConfirmation
         visible={classToCancel !== null}
@@ -61,11 +60,19 @@ export default function ReservationsScreen() {
           setClassToCancel(null);
         }}
       />
-    </ScrollView>
+      <BookingFeedbackOverlay
+        message={feedback}
+        severity={feedbackSeverity}
+        onDismiss={clearFeedback}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  screen: {
+    flex: 1,
+  },
   content: {
     flexGrow: 1,
     width: '100%',

@@ -33,3 +33,14 @@
 - [x] 5.1 Ejecutar la suite Jest completa y confirmar cobertura de HU-01, HU-02, HU-03, RN-01, RN-02, RN-03, RN-04, mensajes literales y bordes temporales descritos en la especificación.
 - [x] 5.2 Ejecutar `npx expo lint` y `npx tsc --noEmit`, corregir todos los hallazgos dentro del alcance y verificar que ambos comandos finalicen sin errores.
 - [x] 5.3 Recorrer manualmente el flujo catálogo -> reservar -> mis reservas -> cancelar con el mock oficial y verificar que no exista autenticación, backend, pagos, notificaciones, AsyncStorage ni funcionalidades adicionales.
+
+## 6. Ajuste de retroalimentación para RN-02
+
+- [x] 6.1 Reemplazar la presentación del error `ALREADY_BOOKED` por un toast accesible y superpuesto fuera del `ScrollView`, conservando exactamente "Ya reservaste esta clase."; verificar que un intento duplicado no cambie las reservas ni los cupos y que el mensaje sea visible desde la parte inferior del catálogo.
+- [x] 6.2 Ejecutar las pruebas Jest relacionadas, `npx expo lint` y `npx tsc --noEmit`, y verificar manualmente el toast en los modos claro y oscuro y en las plataformas disponibles.
+
+## 7. Retroalimentación flotante por severidad
+
+- [x] 7.1 Incorporar una severidad tipada para los resultados con mensaje: `success` para reserva exitosa, `warning` para `ALREADY_BOOKED` y `CANCELLATION_WINDOW`, y `error` para `NO_CAPACITY` y `DAILY_LIMIT`; verificar con Jest el mapeo y que los textos funcionales exactos no cambien.
+- [x] 7.2 Generalizar el toast accesible para presentar todos los mensajes no vacíos fuera del `ScrollView` en el catálogo y “Mis reservas”, usando verde, amarillo o rojo según su severidad y una indicación accesible que no dependa únicamente del color; verificar cierre, área segura y visibilidad desde cualquier posición del scroll en modos claro y oscuro.
+- [x] 7.3 Ejecutar la suite Jest completa, `npx expo lint`, `npx tsc --noEmit`, la compilación para las plataformas disponibles y `openspec validate add-class-booking --strict`; registrar la verificación en la bitácora de IA.

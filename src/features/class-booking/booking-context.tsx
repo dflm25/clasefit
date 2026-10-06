@@ -5,7 +5,7 @@ import { classData } from './data';
 import { getReservedClasses } from './selectors';
 import { bookingReducer, initialBookingState } from './state';
 import { getUpcomingClasses, scheduleClass } from './time';
-import type { ScheduledClass } from './types';
+import type { FeedbackSeverity, ScheduledClass } from './types';
 
 type BookingContextValue = {
   gymName: string;
@@ -14,6 +14,7 @@ type BookingContextValue = {
   reservedClasses: ScheduledClass[];
   reservations: { classId: string }[];
   feedback: string | null;
+  feedbackSeverity: FeedbackSeverity | null;
   book: (classId: string) => void;
   cancel: (classId: string) => void;
   clearFeedback: () => void;
@@ -36,6 +37,7 @@ export function BookingProvider({ children }: PropsWithChildren) {
       reservedClasses,
       reservations: state.reservations,
       feedback: state.feedback,
+      feedbackSeverity: state.feedbackSeverity,
       book(classId) {
         const selectedClass = allClasses.find(({ id }) => id === classId);
         if (!selectedClass) return;
@@ -56,7 +58,14 @@ export function BookingProvider({ children }: PropsWithChildren) {
         dispatch({ type: 'clearFeedback' });
       },
     }),
-    [allClasses, upcomingClasses, reservedClasses, state.feedback, state.reservations],
+    [
+      allClasses,
+      upcomingClasses,
+      reservedClasses,
+      state.feedback,
+      state.feedbackSeverity,
+      state.reservations,
+    ],
   );
 
   return <BookingContext.Provider value={value}>{children}</BookingContext.Provider>;

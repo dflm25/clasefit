@@ -47,6 +47,25 @@ El sistema DEBE (`MUST`) crear en memoria una reserva para la clase seleccionada
 - **WHEN** la aplicación se reinicia después de crear reservas
 - **THEN** el sistema vuelve a iniciar sin reservas de la socia y conserva los valores originales de `ocupados` del archivo fuente
 
+### Requirement: Retroalimentación flotante por severidad
+El sistema DEBE (`MUST`) presentar todos los mensajes operativos definidos por el MVP como mensajes flotantes accesibles, visibles sin depender de la posición del scroll. La presentación DEBE distinguir éxito en verde, advertencia en amarillo y error en rojo, y NO DEBE (`MUST NOT`) depender únicamente del color para comunicar la severidad.
+
+#### Scenario: Reserva exitosa mostrada como éxito
+- **WHEN** una reserva se crea correctamente
+- **THEN** el sistema muestra "¡Listo! Tu cupo está reservado" en un mensaje flotante con severidad de éxito y tratamiento visual verde
+
+#### Scenario: Resultado informativo mostrado como advertencia
+- **WHEN** una operación devuelve `ALREADY_BOOKED` o `CANCELLATION_WINDOW`
+- **THEN** el sistema muestra el mensaje funcional correspondiente en un mensaje flotante con severidad de advertencia y tratamiento visual amarillo
+
+#### Scenario: Reserva rechazada mostrada como error
+- **WHEN** una operación devuelve `NO_CAPACITY` o `DAILY_LIMIT`
+- **THEN** el sistema muestra el mensaje funcional correspondiente en un mensaje flotante con severidad de error y tratamiento visual rojo
+
+#### Scenario: Severidad perceptible sin color
+- **WHEN** se presenta cualquier mensaje flotante de éxito, advertencia o error
+- **THEN** el sistema comunica también su severidad mediante texto o semántica accesible y mantiene el mensaje visible independientemente de la posición del scroll
+
 ### Requirement: RN-01 - Impedir reserva sin cupos
 El sistema NO DEBE (`MUST NOT`) crear una reserva cuando la clase no tiene cupos disponibles y DEBE mostrar "Esta clase ya no tiene cupos.".
 
@@ -63,7 +82,8 @@ El sistema NO DEBE (`MUST NOT`) permitir que la socia mantenga más de una reser
 
 #### Scenario: Segundo intento sobre la misma clase
 - **WHEN** la socia intenta reservar una clase para la cual ya mantiene una reserva activa
-- **THEN** el sistema conserva una sola reserva, no modifica de nuevo la disponibilidad y muestra "Ya reservaste esta clase."
+- **THEN** el sistema conserva una sola reserva y no modifica de nuevo la disponibilidad
+- **AND** muestra "Ya reservaste esta clase." como advertencia flotante visible sin depender de la posición del scroll
 
 #### Scenario: Nueva reserva después de cancelar
 - **WHEN** la socia canceló válidamente una reserva y vuelve a reservar la misma clase mientras todavía cumple las reglas de reserva

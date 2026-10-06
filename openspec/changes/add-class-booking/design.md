@@ -47,6 +47,10 @@ Las operaciones devolverán éxito o un código de error de dominio (`NO_CAPACIT
 
 Esto evita variaciones de texto y permite afirmar en pruebas tanto el código como el mensaje. Si varias precondiciones fallan simultáneamente, la implementación tendrá un orden de evaluación estable y documentado en pruebas; la especificación solo exige el mensaje correspondiente al caso aislado de cada regla.
 
+La presentación asociará cada resultado con una severidad tipada (`success`, `warning` o `error`) sin modificar las reglas ni los mensajes centralizados. La reserva exitosa será `success`; `ALREADY_BOOKED` y `CANCELLATION_WINDOW` serán `warning`; `NO_CAPACITY` y `DAILY_LIMIT` serán `error`. Una cancelación exitosa continuará sin generar un mensaje nuevo porque el documento funcional no lo define.
+
+Todos los mensajes no vacíos usarán un único toast accesible, superpuesto al contenido y renderizado fuera del `ScrollView` tanto en el catálogo como en “Mis reservas”. El toast se anclará al área visible, respetará el área segura y conservará una acción para cerrarlo. Usará verde para `success`, amarillo para `warning` y rojo para `error`, con combinaciones de fondo y texto que mantengan contraste en modos claro y oscuro. La severidad también se comunicará mediante texto o semántica accesible para no depender únicamente del color.
+
 ### 5. Dos destinos de navegación con Expo Router
 
 La aplicación tendrá acceso directo al catálogo de clases y a “Mis reservas” dentro del enrutamiento existente. Las pantallas se limitarán a composición y eventos; tarjetas, estados vacíos y confirmación serán componentes fuera de `src/app/`. La confirmación de cancelación usará una interacción nativa/multiplataforma compatible con la versión instalada, verificada contra la documentación de Expo SDK 57 durante la implementación.
@@ -65,6 +69,7 @@ Se priorizan pruebas unitarias de dominio; pruebas end-to-end y servicios de rel
 - **Riesgo: el tiempo avanza mientras una pantalla permanece abierta.** -> Evaluar el instante actual al ejecutar reservar/cancelar y recalcular los selectores al entrar o actualizar la vista, sin almacenar fechas derivadas como estado permanente.
 - **Riesgo: catálogo y reservas divergen en cupos.** -> Derivar ambos desde el JSON inmutable y el único conjunto de reservas activas.
 - **Riesgo: mensajes funcionales cambian por copias en componentes.** -> Centralizar literales y cubrirlos con pruebas exactas.
+- **Riesgo: la severidad se comunica solo mediante color.** -> Mantenerla tipada, anunciarla de forma accesible y verificar contraste en ambos temas.
 - **Compensación: las reservas se pierden al reiniciar.** -> Es una decisión intencional del MVP; AsyncStorage queda fuera de la primera implementación.
 
 ## Plan de migración

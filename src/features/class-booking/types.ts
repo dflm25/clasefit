@@ -36,6 +36,8 @@ export type BookingErrorCode =
   | 'DAILY_LIMIT'
   | 'CANCELLATION_WINDOW';
 
+export type FeedbackSeverity = 'success' | 'warning' | 'error';
+
 export type OperationResult =
   | { ok: true; message: string; reservations: Reservation[] }
   | { ok: false; code: BookingErrorCode; message: string; reservations: Reservation[] };
