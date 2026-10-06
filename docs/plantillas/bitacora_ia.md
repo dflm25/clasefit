@@ -7,6 +7,10 @@
 - **Edición mediante parches**: creé y corregí los artefactos Markdown conservando los cambios existentes del repositorio.
 - **TypeScript (`npx tsc --noEmit`)**: confirmé que el proyecto continuaba compilando después de generar la documentación.
 - **Expo CLI (`npx expo lint`)**: intenté ejecutar el lint requerido por el proyecto; detecté que ESLint todavía no estaba configurado y evité conservar la instalación automática fuera del alcance.
+- **Documentación oficial de Expo SDK 57 y React Native 0.86**: confirmé versiones, configuración de Jest, Expo Router, ESLint y el componente `Modal` antes de implementar.
+- **Jest con `jest-expo`**: ejecuté 28 pruebas unitarias sobre fechas, disponibilidad, reservas, cancelaciones, mensajes y estado en memoria.
+- **Expo Export**: generé bundles para iOS, Android y web para comprobar que las rutas y componentes compilan en las tres plataformas.
+- **Navegador automatizado**: recorrí el catálogo y “Mis reservas” en vista móvil, verifiqué modo oscuro, mensajes, límite diario y confirmación de cancelación.
 
 ## Prompts clave (3 a 5)
 | # | Fase | Prompt | Qué obtuve |
@@ -23,6 +27,8 @@
 | 1 | Escribió los requisitos normativos solo con la palabra española “DEBE”. El validador estricto de OpenSpec busca además `MUST` o `SHALL`. | `openspec validate add-class-booking --strict` reportó una advertencia por cada requisito nuevo. | Se conservó el texto en español y se agregó la equivalencia RFC 2119 `MUST` o `MUST NOT` en cada requisito. |
 | 2 | Ejecutó `npx expo lint` en un proyecto sin ESLint configurado; Expo intentó instalar dependencias automáticamente, lo cual excedía el alcance de solo planificación. | La salida indicó “No ESLint config found” y `git status` mostró cambios no deseados en `package.json`. | Se retiraron las dependencias agregadas automáticamente y se verificó que no quedaran cambios en `package.json` ni `package-lock.json`. La configuración de lint quedó como tarea de implementación. |
 | 3 | Una inspección usó el patrón `bun.lock*` en `zsh`; al no existir coincidencias, el shell detuvo ese comando con `no matches found`. | La terminal mostró `zsh: no matches found: bun.lock*`. | Se comprobó después el gestor de paquetes listando los archivos del proyecto; existe `package-lock.json`, por lo que corresponden comandos con `npx`. |
+| 4 | El primer parche de interfaz intentó modificar `app-tabs.web.tsx` varias veces dentro de la misma operación. | La herramienta rechazó el parche antes de aplicar cambios parciales. | Se reorganizó la edición para modificar cada archivo una sola vez por parche. |
+| 5 | El lint inicial reveló un `setState` síncrono dentro de un efecto en el hook web heredado del starter. | `npx expo lint` señaló `react-hooks/set-state-in-effect` en `use-color-scheme.web.ts`. | Se reemplazó el efecto por `useSyncExternalStore`, conservando el comportamiento seguro para render estático y dejando lint sin errores. |
 
 ## Resultado de `openspec validate`
 ```

@@ -1,20 +1,22 @@
+import { useState } from 'react';
 import { Platform, ScrollView, StyleSheet } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { BookingFeedback } from '@/components/booking-feedback';
+import { CancellationConfirmation } from '@/components/cancellation-confirmation';
 import { ClassCard } from '@/components/class-card';
 import { ThemedText } from '@/components/themed-text';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { useBooking } from '@/features/class-booking/booking-context';
-import { formatAvailability, hasReservation } from '@/features/class-booking/selectors';
+import { EMPTY_RESERVATIONS_MESSAGE } from '@/features/class-booking/messages';
 import { formatClassDay } from '@/features/class-booking/time';
 import { useTheme } from '@/hooks/use-theme';
 
-export default function HomeScreen() {
+export default function ReservationsScreen() {
   const theme = useTheme();
   const insets = useSafeAreaInsets();
-  const { gymName, memberName, upcomingClasses, reservations, feedback, book, clearFeedback } =
-    useBooking();
+  const { reservedClasses, feedback, cancel, clearFeedback } = useBooking();
+  const [classToCancel, setClassToCancel] = useState<string | null>(null);
 
   return (
     <ScrollView
@@ -27,28 +29,38 @@ export default function HomeScreen() {
         },
         Platform.OS === 'web' && styles.webContent,
       ]}>
-      <ThemedText type="small" themeColor="textSecondary">
-        {gymName}
+      <ThemedText type="subtitle">Mis reservas</ThemedText>
+      <ThemedText themeColor="textSecondary">
+        Administra las clases a las que vas a asistir.
       </ThemedText>
-      <ThemedText type="subtitle">Próximas clases</ThemedText>
-      <ThemedText themeColor="textSecondary">Hola, {memberName}</ThemedText>
 
       {feedback && <BookingFeedback message={feedback} onDismiss={clearFeedback} />}
 
-      {upcomingClasses.map((item) => {
-        const availability = formatAvailability(item, reservations);
-        return (
+      {reservedClasses.length === 0 ? (
+        <ThemedText accessibilityRole="text" style={styles.empty} themeColor="textSecondary">
+          {EMPTY_RESERVATIONS_MESSAGE}
+        </ThemedText>
+      ) : (
+        reservedClasses.map((item) => (
           <ClassCard
             key={item.id}
             scheduledClass={item}
             dayLabel={formatClassDay(item.startAt)}
-            availability={availability}
-            actionLabel={hasReservation(item.id, reservations) ? 'Reservar de nuevo' : 'Reservar'}
-            actionDisabled={availability === 'Llena'}
-            onAction={() => book(item.id)}
+            actionLabel="Cancelar"
+            actionTone="danger"
+            onAction={() => setClassToCancel(item.id)}
           />
-        );
-      })}
+        ))
+      )}
+
+      <CancellationConfirmation
+        visible={classToCancel !== null}
+        onDismiss={() => setClassToCancel(null)}
+        onConfirm={() => {
+          if (classToCancel) cancel(classToCancel);
+          setClassToCancel(null);
+        }}
+      />
     </ScrollView>
   );
 }
@@ -64,5 +76,9 @@ const styles = StyleSheet.create({
   },
   webContent: {
     paddingTop: Spacing.six,
+  },
+  empty: {
+    paddingVertical: Spacing.six,
+    textAlign: 'center',
   },
 });
