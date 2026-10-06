@@ -63,3 +63,23 @@ Docs: https://docs.expo.dev/eas/index.md
 - Write each spec, proposal or any docs in Spanish even if the request is in English.
 - Generate code that is easy to understand for development team.
 - Add comments only when you find complexity in code.
+
+## Fases obligatorias del proyecto
+
+Todo trabajo debe seguir, en orden, las fases definidas en
+`docs/03_Prueba_Tecnica_React_Native.md`:
+
+1. Setup y contexto.
+2. Proposal, spec, design y tasks.
+3. Apply y verify.
+4. Archive y release.
+5. Bitácora y reflexión.
+
+Reglas:
+
+- No avanzar a una fase sin completar todos los requisitos de la fase actual.
+- Informar siempre en qué fase se encuentra el proyecto.
+- Verificar todos los entregables antes de declarar una fase terminada.
+- Crear un commit al finalizar cada fase.
+- Mantener actualizada `docs/plantillas/bitacora_ia.md` durante todo el proceso.
+- No archivar el cambio OpenSpec hasta completar y verificar la implementación.

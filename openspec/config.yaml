@@ -1,32 +1,55 @@
 schema: spec-driven
 
-# Project context (optional)
-# Add only constraints that should guide OpenSpec artifacts and workflows.
-# Include constraints an agent cannot infer by reading the code.
-# Keep general project documentation and discoverable codebase facts out.
-# Example:
-#   context: |
-#     Designs and tasks must cover Windows, macOS, and Linux
-#     Write all artifacts in Spanish
+context: |
+  ClaseFit es una aplicación móvil construida con Expo SDK 57, React Native,
+  TypeScript y Expo Router. Las rutas viven en src/app; componentes, hooks,
+  utilidades y lógica de negocio deben permanecer fuera de esa carpeta.
 
-# Per-artifact rules (optional)
-# Add custom rules for specific artifacts.
-# Example:
-#   rules:
-#     proposal:
-#       - Keep proposals under 500 words
-#       - Always state what is out of scope
-#     tasks:
-#       - Break tasks into chunks of max 2 hours
+  El proyecto debe seguir en orden las cinco fases definidas en
+  docs/03_Prueba_Tecnica_React_Native.md. No se debe avanzar a la fase
+  siguiente sin verificar los entregables y crear el commit de cierre de la
+  fase actual.
 
-# Per-operation guidance (optional)
-# Add advisory guidance for how apply and archive work should be conducted.
-# This is separate from artifact rules above.
-# Example:
-#   operations:
-#     apply:
-#       guidance:
-#         - Keep test summaries concise
-#     archive:
-#       guidance:
-#         - Summarize the archive outcome before finishing
+  Alcance del MVP: frontend local, sin autenticación, backend, pagos,
+  notificaciones ni administración. Las clases provienen de
+  docs/insumo-funcional/mock-data/clases.json y las reservas viven en memoria.
+  La lógica de negocio debe estar separada de la UI y ser comprobable con Jest.
+  Las fechas se resuelven mediante diaOffset en America/Bogota.
+
+  Comandos del proyecto:
+  - npm install: instalar dependencias.
+  - npx expo start: iniciar la aplicación.
+  - npm test -- --runInBand: ejecutar las pruebas una vez configurado Jest en la fase 3.
+  - npx expo lint: ejecutar lint una vez configurado ESLint en la fase 3.
+  - npx tsc --noEmit: comprobar TypeScript.
+  - openspec validate <change-id> --strict: validar un cambio OpenSpec.
+
+  Todos los artefactos OpenSpec y la documentación del proyecto deben escribirse
+  en español. Antes de usar APIs de Expo, EAS o React Native se debe consultar la
+  documentación oficial correspondiente a Expo SDK 57.
+
+rules:
+  proposal:
+    - Mantener el alcance limitado al insumo funcional y declarar explícitamente lo que queda fuera.
+    - Escribir el artefacto en español.
+  specs:
+    - Escribir el artefacto en español y conservar literalmente los mensajes definidos para el usuario.
+    - Expresar cada regla de negocio mediante requisitos y escenarios verificables.
+  design:
+    - Separar la lógica de negocio de la interfaz y justificar las decisiones técnicas relevantes.
+    - Escribir el artefacto en español.
+  tasks:
+    - Crear pasos pequeños, verificables y ordenados por dependencia.
+    - Incluir pruebas, lint y comprobación de TypeScript antes de cerrar la implementación.
+    - Escribir el artefacto en español.
+
+operations:
+  apply:
+    guidance:
+      - Implementar y marcar las tareas en orden, sin ampliar el alcance aprobado.
+      - Mantener actualizada docs/plantillas/bitacora_ia.md durante el trabajo.
+      - No archivar hasta que pruebas, lint y TypeScript finalicen correctamente.
+  archive:
+    guidance:
+      - Archivar únicamente después de completar y verificar la fase 3.
+      - Confirmar que la especificación principal resultante conserve HU-01 a HU-03 y RN-01 a RN-04.
