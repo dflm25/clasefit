@@ -23,7 +23,7 @@
 ## 4. Interfaz móvil y navegación
 
 - [ ] 4.1 Configurar con Expo Router los destinos de catálogo y “Mis reservas” y montar el proveedor en el layout común; verificar navegación en iOS, Android y web sin colocar código no-route dentro de `src/app/`.
-- [ ] 4.2 Implementar el catálogo móvil con tarjetas que muestren nombre, día, hora, instructor, cupos o "Llena", y acciones de reserva deshabilitadas cuando corresponda; verificar manualmente el contenido y orden usando todos los casos del JSON.
+- [ ] 4.2 Implementar el catálogo móvil con tarjetas que muestren nombre, día, hora, instructor, cupos disponibles en formato "5 de 20 cupos" o "Llena", y acciones de reserva deshabilitadas cuando corresponda; verificar manualmente el contenido y orden usando todos los casos del JSON.
 - [ ] 4.3 Conectar la acción de reservar a los resultados de dominio y presentar los mensajes exactos de éxito, RN-01, RN-02 y RN-03; verificar manualmente que cada resultado se muestra y que solo el éxito modifica cupos y reservas.
 - [ ] 4.4 Implementar “Mis reservas” con orden cronológico, estado vacío y confirmación de cancelación; verificar manualmente que descartar conserva la reserva, confirmar aplica RN-04 y una cancelación válida libera el cupo.
 - [ ] 4.5 Aplicar estilos mínimos, responsivos y accesibles usando el tema existente; verificar contraste, etiquetas/roles, áreas táctiles y legibilidad en modos claro y oscuro en plataformas móviles.
