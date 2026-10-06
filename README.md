@@ -1,56 +1,155 @@
-# Welcome to Keppri-Gym
+# ClaseFit
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplicación móvil para consultar, reservar y cancelar clases grupales de un gimnasio. El MVP fue desarrollado con Expo, React Native y TypeScript siguiendo un flujo SDD con OpenSpec.
 
-## Get started
+## Funcionalidades
 
-1. Install dependencies
+- Consulta de clases de hoy, mañana y pasado mañana.
+- Fechas calculadas mediante `diaOffset` en la zona horaria `America/Bogota`.
+- Clases ordenadas cronológicamente y exclusión de las que ya comenzaron.
+- Reserva de clases con actualización inmediata de cupos.
+- Listado y cancelación de reservas activas.
+- Límite máximo de dos reservas por día.
+- Cancelación permitida hasta exactamente dos horas antes del inicio.
+- Mensajes flotantes accesibles para resultados exitosos, advertencias y errores.
+- Compatibilidad con modos claro y oscuro.
 
-   ```bash
-   npm install
-   ```
+## Alcance del MVP
 
-2. Start the app
+La aplicación utiliza exclusivamente datos locales de [clases.json](docs/insumo-funcional/mock-data/clases.json). Las reservas se almacenan en memoria y se pierden al reiniciar la aplicación.
 
-   ```bash
-   npx expo start
-   ```
+No incluye autenticación, backend, pagos, notificaciones, administración, gestión de instructores ni persistencia con AsyncStorage.
 
-In the output, you'll find options to open the app in a
+## Tecnologías
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+- Expo SDK 57
+- React Native 0.86
+- React 19
+- TypeScript
+- Expo Router
+- Jest con `jest-expo`
+- OpenSpec
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Requisitos previos
 
-## Get a fresh project
+- Node.js compatible con Expo SDK 57
+- npm
+- Expo Go, un simulador o un dispositivo configurado para ejecutar la aplicación
 
-When you're ready, run:
+## Instalación
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Ejecución
 
-### Other setup steps
+Iniciar el servidor de desarrollo:
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+```bash
+npx expo start
+```
 
-## Learn more
+También se puede iniciar directamente para una plataforma:
 
-To learn more about developing your project with Expo, look at the following resources:
+```bash
+npm run android
+npm run ios
+npm run web
+```
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Verificación
 
-## Join the community
+Ejecutar las pruebas unitarias:
 
-Join our community of developers creating universal apps.
+```bash
+npm test -- --runInBand
+```
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Ejecutar lint:
+
+```bash
+npx expo lint
+```
+
+Comprobar TypeScript:
+
+```bash
+npx tsc --noEmit
+```
+
+Comprobar dependencias y configuración de Expo:
+
+```bash
+npx expo-doctor
+```
+
+Generar bundles locales de verificación para las plataformas soportadas:
+
+```bash
+npx expo export --platform all
+```
+
+## Estructura principal
+
+```text
+src/
+├── app/                         # Rutas y pantallas de Expo Router
+├── components/                  # Componentes reutilizables de presentación
+├── constants/                   # Tokens y constantes visuales
+├── features/class-booking/      # Dominio, estado y reglas de reservas
+└── hooks/                       # Hooks compartidos
+
+__tests__/                       # Pruebas unitarias con Jest
+docs/                            # Insumo funcional, guía y bitácora
+openspec/
+├── specs/class-booking/         # Especificación principal sincronizada
+└── changes/archive/             # Historial de cambios OpenSpec
+```
+
+La lógica de disponibilidad, reserva, cancelación y fechas permanece separada de las pantallas para poder probarse sin renderizar la interfaz.
+
+## Reglas de negocio
+
+- **RN-01:** no se puede reservar una clase sin cupos.
+- **RN-02:** no se puede reservar dos veces la misma clase.
+- **RN-03:** se permiten como máximo dos reservas por fecha de clase.
+- **RN-04:** una reserva puede cancelarse hasta exactamente dos horas antes del inicio.
+
+Los mensajes funcionales y sus escenarios verificables se encuentran en [la especificación de class-booking](openspec/specs/class-booking/spec.md).
+
+## Configuración de la aplicación
+
+La aplicación se identifica como `ClaseFit` y utiliza los siguientes identificadores nativos:
+
+- iOS: `com.clasefit.dlucumi`
+- Android: `com.clasefit.dlucumi`
+
+La configuración de Expo está en [app.json](app.json), y los perfiles EAS `development`, `preview` y `production` están definidos en [eas.json](eas.json).
+
+## Builds con EAS
+
+Para iniciar un build interno de Android:
+
+```bash
+npx eas-cli@latest build --platform android --profile preview
+```
+
+Para un build de producción:
+
+```bash
+npx eas-cli@latest build --platform all --profile production
+```
+
+Estos comandos requieren una cuenta de Expo, conexión a internet y credenciales válidas para cada plataforma. La presencia de la configuración EAS no implica que los builds o publicaciones en tiendas ya se hayan completado.
+
+## Documentación
+
+- [Insumo funcional](docs/insumo-funcional/insumo_funcional_ClaseFit.md)
+- [Prueba técnica](docs/03_Prueba_Tecnica_React_Native.md)
+- [Bitácora de uso de IA](docs/plantillas/bitacora_ia.md)
+- [Checklist de release](docs/plantillas/checklist_release.md)
+
+## Estado del proyecto
+
+El ciclo funcional de OpenSpec para `add-class-booking` fue implementado, validado, sincronizado y archivado. La preparación de release continúa con la revisión del checklist y, opcionalmente, la generación de un build `preview`.

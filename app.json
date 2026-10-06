@@ -1,16 +1,18 @@
 {
   "expo": {
-    "name": "keppri-gym",
-    "slug": "keppri-gym",
+    "name": "ClaseFit",
+    "slug": "ClaseFit",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "kepprigym",
+    "scheme": "clasefit",
     "userInterfaceStyle": "automatic",
     "ios": {
-      "icon": "./assets/expo.icon"
+      "icon": "./assets/expo.icon",
+      "bundleIdentifier": "com.clasefit.dlucumi"
     },
     "android": {
+      "package": "com.clasefit.dlucumi",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -37,6 +39,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "9641bb52-2f02-406e-b5a8-3687d31153f3"
+      }
     }
   }
 }
