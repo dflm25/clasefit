@@ -135,6 +135,15 @@ La configuración de Expo está en [app.json](app.json), y los perfiles EAS `dev
 
 ## Builds con EAS
 
+Hay un build interno de Android generado con el perfil `preview`:
+
+- [Descargar APK de ClaseFit](https://expo.dev/artifacts/eas/rmHkL9CbjmnlJjywSqb35GipTACmYcWMk-FvAzTIwFc.apk)
+- Identificador de la aplicación: `com.clasefit.dlucumi`
+- Versión: `1.0.0` (`versionCode` 1)
+- Disponibilidad del enlace de EAS: hasta el 20 de octubre de 2026
+
+Este APK puede compartirse para pruebas y demostraciones en dispositivos Android. Como el enlace de EAS es temporal, conviene descargar el archivo antes de su vencimiento. Android puede solicitar autorización para instalar aplicaciones provenientes de fuentes externas.
+
 Para iniciar un build interno de Android:
 
 ```bash
@@ -147,7 +156,7 @@ Para un build de producción:
 npx eas-cli@latest build --platform all --profile production
 ```
 
-Estos comandos requieren una cuenta de Expo, conexión a internet y credenciales válidas para cada plataforma. La presencia de la configuración EAS no implica que los builds o publicaciones en tiendas ya se hayan completado.
+Estos comandos requieren una cuenta de Expo, conexión a internet y credenciales válidas para cada plataforma. El APK documentado es un build interno de demostración y no representa una publicación en Google Play.
 
 ## Documentación
 
@@ -158,4 +167,4 @@ Estos comandos requieren una cuenta de Expo, conexión a internet y credenciales
 
 ## Estado del proyecto
 
-El ciclo funcional de OpenSpec para `add-class-booking` fue implementado, validado, sincronizado y archivado. La preparación de release continúa con la revisión del checklist y, opcionalmente, la generación de un build `preview`.
+El ciclo funcional de OpenSpec para `add-class-booking` fue implementado, validado, sincronizado y archivado. También se generó correctamente un build `preview` de Android para instalación y demostración.
