@@ -2,6 +2,12 @@
 
 Aplicación móvil para consultar, reservar y cancelar clases grupales de un gimnasio. El MVP fue desarrollado con Expo, React Native y TypeScript siguiendo un flujo SDD con OpenSpec.
 
+## Demostración
+
+Puedes ver la aplicación funcionando en el siguiente video:
+
+[![Demostración de ClaseFit](https://img.youtube.com/vi/gUwMPDnIzp8/hqdefault.jpg)](https://youtube.com/shorts/gUwMPDnIzp8?feature=share)
+
 ## Funcionalidades
 
 - Consulta de clases de hoy, mañana y pasado mañana.
